@@ -7,7 +7,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  // ✅ Check if user is logged in (from localStorage)
+  // ✅ Load User from LocalStorage on Page Load
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -19,22 +19,35 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       const response = await axios.post("http://localhost:5000/api/auth/login", { email, password });
-      localStorage.setItem("user", JSON.stringify(response.data.user)); // Store user
-      setUser(response.data.user);
-      return response.data.user; // Return user for redirection
+
+      if (response.data.user && response.data.token) {
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+        localStorage.setItem("token", response.data.token);
+        setUser(response.data.user);
+        return response.data.user; // ✅ Returning user for redirection
+      } else {
+        throw new Error("Invalid Login Response");
+      }
     } catch (error) {
-      throw new Error("Invalid Credentials");
+      throw new Error(error.response?.data?.message || "Login failed");
     }
   };
 
   // ✅ Logout Function
   const logout = () => {
     localStorage.removeItem("user");
+    localStorage.removeItem("token");
     setUser(null);
   };
 
-  return <AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
-// ✅ Custom Hook for Authentication
-export const useAuth = () => useContext(AuthContext);
+// ✅ Export useAuth Correctly
+export const useAuth = () => {
+  return useContext(AuthContext);
+};

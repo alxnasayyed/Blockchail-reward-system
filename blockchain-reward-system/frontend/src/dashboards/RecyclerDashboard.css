@@ -1,0 +1,28 @@
+.dashboard-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: url("/recycler-bg.jpg") no-repeat center center/cover; /* Background Image */
+  }
+  
+  .dashboard-grid {
+    width: 100%;
+    max-width: 900px;
+  }
+  
+  .dashboard-card {
+    background: rgba(255, 255, 255, 0.1); /* Transparent effect */
+    backdrop-filter: blur(10px);
+    color: white;
+    text-align: center;
+    padding: 20px;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out, background 0.3s ease-in-out;
+  }
+  
+  .dashboard-card:hover {
+    transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.2);
+  }
+  

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { TextField, Button, Container, Typography, MenuItem } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import "../styles/Signup.css"; // ✅ Import new styles
 
 const Signup = () => {
   const [name, setName] = useState("");

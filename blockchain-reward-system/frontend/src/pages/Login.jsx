@@ -1,65 +1,70 @@
 import React, { useState } from "react";
-import { TextField, Button, Container, Typography } from "@mui/material";
+import { TextField, Button, Container, Typography, Paper } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import axios from "axios"; // ✅ Import axios for direct API call debugging
+import "../styles/Login.css"; // ✅ Import new styles
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login } = useAuth();
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleLogin = async () => {
     try {
-      console.log("🔍 Sending Login Request:", { email, password });
+      const user = await login(email.trim(), password);
+      console.log("✅ User Logged In:", user);
+      console.log("🔄 Redirecting to:", `/dashboard/${user.role}`);
 
-      // ✅ Direct API Call to Debug the Response
-      const response = await axios.post("http://localhost:5000/api/auth/login", {
-        email,
-        password,
-      });
-
-      console.log("✅ Login Response:", response.data); // Debugging Line
-
-      if (!response.data || !response.data.success) {
-        alert("Login failed. Please check your credentials.");
-        return;
-      }
-
-      const user = response.data.user;
-      console.log("🔹 Logged in User:", user);
-
-      // ✅ Redirect Based on Role
       switch (user.role) {
         case "user":
-          navigate("/dashboard/user");
+          navigate("/dashboard/user", { replace: true });
           break;
         case "admin":
-          navigate("/dashboard/admin");
+          navigate("/dashboard/admin", { replace: true });
           break;
         case "recycler":
-          navigate("/dashboard/recycler");
+          navigate("/dashboard/recycler", { replace: true });
           break;
         case "collector":
-          navigate("/dashboard/collector");
+          navigate("/dashboard/collector", { replace: true });
           break;
         default:
-          navigate("/");
+          alert("Invalid role. Contact admin.");
+          navigate("/", { replace: true });
       }
     } catch (error) {
-      console.error("❌ Login Error:", error.response?.data || error);
-      alert("Login Failed. Please try again.");
+      console.error("❌ Login Error:", error.message);
+      alert(error.message);
     }
   };
 
   return (
-    <Container>
-      <Typography variant="h4" gutterBottom>Login</Typography>
-      <TextField label="Email" fullWidth margin="normal" value={email} onChange={(e) => setEmail(e.target.value)} />
-      <TextField label="Password" type="password" fullWidth margin="normal" value={password} onChange={(e) => setPassword(e.target.value)} />
-      <Button variant="contained" color="primary" fullWidth onClick={handleLogin}>Login</Button>
-    </Container>
+    <div className="login-container">
+      <Paper elevation={5} className="login-box">
+        <Typography variant="h4" gutterBottom>Login</Typography>
+        <TextField 
+          label="Email" 
+          fullWidth 
+          margin="normal" 
+          value={email} 
+          onChange={(e) => setEmail(e.target.value)} 
+          className="input-field"
+        />
+        <TextField 
+          label="Password" 
+          type="password" 
+          fullWidth 
+          margin="normal" 
+          value={password} 
+          onChange={(e) => setPassword(e.target.value)} 
+          className="input-field"
+        />
+        <Button variant="contained" fullWidth className="login-btn" onClick={handleLogin}>
+          Login
+        </Button>
+      </Paper>
+    </div>
   );
 };
 
