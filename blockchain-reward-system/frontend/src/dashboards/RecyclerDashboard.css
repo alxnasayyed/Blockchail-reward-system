@@ -1,28 +1,165 @@
-.dashboard-container {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: url("/recycler-bg.jpg") no-repeat center center/cover; /* Background Image */
-  }
-  
-  .dashboard-grid {
-    width: 100%;
-    max-width: 900px;
-  }
-  
-  .dashboard-card {
-    background: rgba(255, 255, 255, 0.1); /* Transparent effect */
-    backdrop-filter: blur(10px);
-    color: white;
-    text-align: center;
-    padding: 20px;
-    cursor: pointer;
-    transition: transform 0.3s ease-in-out, background 0.3s ease-in-out;
-  }
-  
-  .dashboard-card:hover {
-    transform: scale(1.05);
-    background: rgba(255, 255, 255, 0.2);
-  }
-  
+import { useState, useEffect } from "react";
+import { ethers } from "ethers";
+import { getContract } from "../contract";
+import "../styles/RecyclerDashboard.css";
+import { FaClipboardList, FaFileAlt, FaEye, FaChartBar } from "react-icons/fa";
+
+const RecyclerDashboard = () => {
+  const [walletAddress, setWalletAddress] = useState("");
+  const [userId, setUserId] = useState("RECYCLER_USER_ID");
+
+  // ✅ Connect Wallet
+  const connectWallet = async () => {
+    if (window.ethereum) {
+      try {
+        const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+        if (!accounts.length) {
+          alert("❌ No accounts returned from MetaMask.");
+          return;
+        }
+
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
+        const address = await signer.getAddress();
+
+        setWalletAddress(address);
+
+        const response = await fetch("http://localhost:5000/api/auth/update-wallet/recycler", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId, wallet: address }),
+        });
+
+        if (!response.ok) throw new Error("❌ Failed to update wallet on backend.");
+
+        console.log("✅ Wallet connected:", address);
+        alert(`✅ Wallet connected: ${address}`);
+      } catch (error) {
+        console.error("❌ Wallet connection failed:", error);
+        alert("❌ Wallet connection failed. Please try again.");
+      }
+    } else {
+      alert("❌ MetaMask not detected! Please install it.");
+    }
+  };
+
+  // ✅ Reward User
+  const rewardUser = async (address, amount) => {
+    try {
+      if (!address || !amount) {
+        alert("❌ Please enter valid user address and amount.");
+        return;
+      }
+
+      const contract = await getContract();
+      if (!contract) return;
+
+      const tx = await contract.rewardRecycler(address, ethers.parseUnits(amount, 18));
+      await tx.wait();
+
+      alert(`✅ Successfully rewarded ${amount} tokens to: ${address}`);
+    } catch (error) {
+      console.error("❌ Error rewarding user:", error);
+      alert("❌ Failed to reward user. Ensure you are connected and have sufficient permissions.");
+    }
+  };
+
+  // ✅ Fetch Wallet
+  useEffect(() => {
+    const fetchWallet = async () => {
+      try {
+        const res = await fetch(`http://localhost:5000/api/auth/recycler?userId=${userId}`);
+        if (!res.ok) throw new Error("❌ Failed to fetch wallet address.");
+
+        const data = await res.json();
+        if (data.walletAddress) setWalletAddress(data.walletAddress);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchWallet();
+  }, [userId]);
+
+  return (
+    <div className="recycler-dashboard-container">
+      <h2>Recycler Dashboard</h2>
+
+      {/* ✅ Wallet Buttons */}
+      <div className="recycler-dashboard-buttons">
+        <button className="dashboard-btn" onClick={connectWallet}>
+          🔗 Connect MetaMask
+        </button>
+        <button className="dashboard-btn" onClick={() => rewardUser(prompt("Enter User Address"),prompt("Enter Amount"))
+          }
+        >
+          🎁 Reward User
+        </button>
+      </div>
+
+
+      <p>Wallet: {walletAddress || "❌ Not Connected"}</p>
+
+      {/* ✅ Dashboard Cards */}
+      <div className="recycler-dashboard-cards">
+        {/* View Pickups */}
+        <div
+          className="recycler-dashboard-card"
+          style={{ backgroundImage: "url('/images/vp.jpg')" }}
+        >
+          <div className="card-overlay">
+            <div className="card-icon"><FaClipboardList /></div>
+            <div className="card-content">
+              <h3>View Pickups</h3>
+              <p>See scheduled pickups.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Generate Recycle Report */}
+        <div
+          className="recycler-dashboard-card"
+          style={{ backgroundImage: "url('/images/grr.jpg')" }}
+        >
+          <div className="card-overlay">
+            <div className="card-icon"><FaFileAlt /></div>
+            <div className="card-content">
+              <h3>Generate Recycle Report</h3>
+              <p>Download recycling data.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Monitor Recycle */}
+        <div
+          className="recycler-dashboard-card"
+          style={{ backgroundImage: "url('/images/mr.jpg')" }}
+        >
+          <div className="card-overlay">
+            <div className="card-icon"><FaEye /></div>
+            <div className="card-content">
+              <h3>Monitor Recycle</h3>
+              <p>Track recycling process.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Recycle Stats */}
+        <div
+          className="recycler-dashboard-card"
+          style={{ backgroundImage: "url('/images/rs.jpg')" }}
+        >
+          <div className="card-overlay">
+            <div className="card-icon"><FaChartBar /></div>
+            <div className="card-content">
+              <h3>Recycle Stats</h3>
+              <p>View performance analytics.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default RecyclerDashboard;
