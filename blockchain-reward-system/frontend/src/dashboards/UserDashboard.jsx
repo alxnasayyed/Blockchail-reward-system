@@ -1,15 +1,14 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
-import { getContract } from "../contract";  
-import "../styles/UserDashboard.css";  
-import { FaRecycle, FaTruck, FaLeaf, FaFileDownload, FaCoins } from "react-icons/fa";  // ✅ Importing Icons
+import { getContract } from "../contract";
+import "../styles/UserDashboard.css";
+import { FaRecycle, FaTruck, FaLeaf, FaFileDownload, FaCoins } from "react-icons/fa";
 
 const UserDashboard = () => {
     const [walletAddress, setWalletAddress] = useState("");
     const [userId, setUserId] = useState("USER_ID");
     const [tokenBalance, setTokenBalance] = useState(0);
 
-    // ✅ Connect Wallet Function
     const connectWallet = async () => {
         if (window.ethereum) {
             try {
@@ -34,7 +33,6 @@ const UserDashboard = () => {
         }
     };
 
-    // ✅ Fetch Token Balance
     useEffect(() => {
         const fetchTokenBalance = async () => {
             try {
@@ -50,7 +48,6 @@ const UserDashboard = () => {
         fetchTokenBalance();
     }, [walletAddress]);
 
-    // ✅ Reward Function
     const redeemReward = async () => {
         try {
             const contract = await getContract();
@@ -65,37 +62,64 @@ const UserDashboard = () => {
     };
 
     return (
-        <div className="dashboard-container">
-            <h2>User Dashboard</h2>
+        <div className="user-dashboard-container">
+            <h2><center>User Dashboard</center></h2>
 
-            {/* ✅ Styled Wallet Buttons */}
-            <div className="wallet-buttons">
-                <button className="connect-wallet" onClick={connectWallet}>🔗 Connect Wallet</button>
-                <button className="redeem-rewards" onClick={redeemReward}>🎁 Redeem Rewards</button>
+            <div className="user-dashboard-buttons">
+                <button className="dashboard-btn" onClick={connectWallet}>🔗 Connect Wallet</button>
+                <button className="dashboard-btn" onClick={redeemReward}>🎁 Redeem Rewards</button>
             </div>
 
-            <p>Wallet: {walletAddress || "Not Connected"}</p>
-            <p>Token Balance: {tokenBalance} Tokens</p>
+            <p><center>Wallet: {walletAddress || "❌Not Connected"}</center></p>
+            <p><center>Token Balance: {tokenBalance} Tokens</center></p>
 
-            {/* ✅ Dashboard Cards */}
             <div className="dashboard-cards">
-                <DashboardCard icon={<FaLeaf />} title="Carbon Footprint" description="Estimate your waste impact." />
-                <DashboardCard icon={<FaTruck />} title="Schedule Pickup" description="Book waste collection service." />
-                <DashboardCard icon={<FaRecycle />} title="Recycle Status" description="Track your recycling progress." />
-                <DashboardCard icon={<FaFileDownload />} title="Download Report" description="Get your recycling history." />
-                <DashboardCard icon={<FaCoins />} title="Token Balance" description={`${tokenBalance} Tokens Available`} />
+                <DashboardCard
+                    icon={<FaLeaf />}
+                    title="Carbon Footprint"
+                    description="Estimate your waste impact."
+                    background="/images/cf.jpg"
+                />
+                <DashboardCard
+                    icon={<FaTruck />}
+                    title="Schedule Pickup"
+                    description="Book waste collection service."
+                    background="/images/sp.jpg"
+                />
+                <DashboardCard
+                    icon={<FaRecycle />}
+                    title="Recycle Status"
+                    description="Track your recycling progress."
+                    background="/images/res.jpg"
+                />
+                <DashboardCard
+                    icon={<FaFileDownload />}
+                    title="Download Report"
+                    description="Get your recycling history."
+                    background="/images/dr.jpg"
+                />
+                <DashboardCard
+                    icon={<FaCoins />}
+                    title="Token Balance"
+                    description={`${tokenBalance} Tokens Available`}
+                    background="/images/ta.jpg"
+                />
             </div>
         </div>
     );
 };
 
-// ✅ Reusable Card Component
-const DashboardCard = ({ icon, title, description }) => (
-    <div className="dashboard-card">
-        <div className="icon">{icon}</div>
-        <div className="card-content">
-            <h3>{title}</h3>
-            <p>{description}</p>
+const DashboardCard = ({ icon, title, description, background }) => (
+    <div
+        className="dashboard-card"
+        style={{ backgroundImage: `url(${background})` }}
+    >
+        <div className="card-overlay">
+            <div className="card-icon">{icon}</div>
+            <div className="card-content">
+                <h3>{title}</h3>
+                <p>{description}</p>
+            </div>
         </div>
     </div>
 );
