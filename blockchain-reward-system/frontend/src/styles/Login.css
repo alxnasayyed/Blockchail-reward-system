@@ -1,58 +1,76 @@
+body {
+  font-family: 'Candara', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
 .login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background: url("../assets/login-bg.jpg") no-repeat center center/cover; /* ✅ Add Image */
-    position: relative;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: url('/images/hero-image.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+
+.login-box {
+  padding: 30px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  text-align: center;
+  width: 500px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
   
-  .login-container::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(106, 17, 203, 0.7), rgba(37, 117, 252, 0.7)); /* ✅ Gradient Overlay */
-    z-index: 1;
-  }
-  
-  .login-box {
-    position: relative;
-    z-index: 2;
-    padding: 30px;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.85); /* ✅ Slight Transparency */
-    text-align: center;
-    width: 350px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-  }
-  
-  .input-field {
-    background: #f9f9f9;
-    border-radius: 5px;
-  }
-  
-  .input-field:hover {
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-  }
-  
-  .login-btn {
-    background: linear-gradient(135deg, #6a11cb, #2575fc);
-    color: white;
-    font-weight: bold;
-    padding: 10px;
-    border-radius: 8px;
-    transition: all 0.3s ease-in-out;
-  }
-  
-  .login-btn:hover {
-    background: linear-gradient(135deg, #5a0ea7, #1f5de6);
-    transform: scale(1.05);
-  }
-  
-  .login-btn:active {
-    transform: scale(0.95);
-  }
-  
+}
+
+.login-title {
+  font-family: 'Candara', sans-serif;
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 30px;
+  color: #fff;
+}
+
+.input-field .MuiOutlinedInput-root {
+  height: 45px;
+  font-size: 14px;
+}
+
+.input-field .MuiInputBase-input {
+  padding: 10px 14px !important;
+  font-size: 14px;
+}
+
+.input-field label {
+  transform: translate(14px, -18px) scale(0.75);
+  background: transparent !important;
+  padding: 0;
+  color: white !important;
+}
+
+.login-btn.MuiButton-root {
+  margin-top: 10px !important;
+  padding: 12px 20px !important;
+  border-radius: 12px !important;
+  background: transparent !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  border: 2px solid #ffffff !important;
+  transition: all 0.3s ease !important;
+  font-size: 15px !important;
+  letter-spacing: 1px !important;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+  cursor: pointer;
+}
+
+.login-btn.MuiButton-root:hover {
+  transform: scale(1.05) !important;
+  background: #ffffff !important;
+  color: #000000 !important; /* Optional: change text to black for contrast */
+  border-color: #ffffff !important ;
+}
+
