@@ -41,30 +41,31 @@ const Login = () => {
 
   return (
     <div className="login-container">
-      <Paper elevation={5} className="login-box">
-        <Typography variant="h4" gutterBottom>Login</Typography>
-        <TextField 
-          label="Email" 
-          fullWidth 
-          margin="normal" 
-          value={email} 
-          onChange={(e) => setEmail(e.target.value)} 
-          className="input-field"
-        />
-        <TextField 
-          label="Password" 
-          type="password" 
-          fullWidth 
-          margin="normal" 
-          value={password} 
-          onChange={(e) => setPassword(e.target.value)} 
-          className="input-field"
-        />
-        <Button variant="contained" fullWidth className="login-btn" onClick={handleLogin}>
-          Login
-        </Button>
-      </Paper>
-    </div>
+  <div className="login-box">
+    <Typography className="login-title">LOG IN</Typography>
+    <TextField 
+      label="Email" 
+      fullWidth 
+      margin="normal" 
+      value={email} 
+      onChange={(e) => setEmail(e.target.value)} 
+      className="input-field"
+    />
+    <TextField 
+      label="Password" 
+      type="password" 
+      fullWidth 
+      margin="normal" 
+      value={password} 
+      onChange={(e) => setPassword(e.target.value)} 
+      className="input-field"
+    />
+   <Button className="login-btn" onClick={handleLogin}>
+  Login
+</Button>
+  </div>
+</div>
+
   );
 };
 
