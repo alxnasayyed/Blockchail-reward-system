@@ -8,7 +8,7 @@ const Navbar = () => {
   const { user, logout } = useAuth();
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: "#2c3e50" }}>
+    <AppBar position="static" sx={{ backgroundColor: "black" }}>
       <Toolbar>
         {/* ✅ App Name */}
         <Typography variant="h6" sx={{ flexGrow: 1 }}>
@@ -20,14 +20,94 @@ const Navbar = () => {
         {/* ✅ Show Login/Signup when no user is logged in */}
         {!user ? (
           <Box>
-            <Button color="inherit" onClick={() => navigate("/signup")}>Sign Up</Button>
-            <Button color="inherit" onClick={() => navigate("/login")}>Login</Button>
+           <Button
+  variant="contained"
+  onClick={() => navigate("/signup")}
+  sx={{
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    backdropFilter: "blur(10px)",
+    border: "1px solid rgba(255, 255, 255, 0.3)",
+    color: "white",
+    boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+    borderRadius: "12px",
+    padding: "8px 16px",
+    marginRight: "10px",
+    "&:hover": {
+      backgroundColor: "rgba(255, 255, 255, 0.3)",
+    },
+  }}
+>
+  Sign Up
+</Button>
+
+<Button
+  variant="contained"
+  onClick={() => navigate("/login")}
+  sx={{
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    backdropFilter: "blur(10px)",
+    border: "1px solid rgba(255, 255, 255, 0.3)",
+    color: "white",
+    boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+    borderRadius: "12px",
+    padding: "8px 16px",
+    "&:hover": {
+      backgroundColor: "rgba(255, 255, 255, 0.3)",
+    },
+  }}
+>
+  Login
+</Button>
+
           </Box>
         ) : (
-          <Box>
-            <Button color="inherit" onClick={() => navigate(`/dashboard/${user.role}`)}>Dashboard</Button>
-            <Button color="inherit" onClick={logout}>Logout</Button>
-          </Box>
+          <Box
+  sx={{
+    display: 'flex',
+    gap: '12px', // ✅ Adds space between the buttons
+  }}
+>
+  <Button
+    variant="contained"
+    color="white"
+    onClick={() => navigate(`/dashboard/${user.role}`)}
+    sx={{
+      backgroundColor: "rgba(255, 255, 255, 0.2)",
+      backdropFilter: "blur(10px)",
+      border: "1px solid rgba(255, 255, 255, 0.3)",
+      color: "white",
+      boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+      borderRadius: "12px",
+      padding: "8px 16px",
+      "&:hover": {
+        backgroundColor: "rgba(255, 255, 255, 0.3)",
+      },
+    }}
+  >
+    Dashboard
+  </Button>
+
+  <Button
+    variant="contained"
+    color="white"
+    onClick={logout}
+    sx={{
+      backgroundColor: "rgba(255, 255, 255, 0.2)",
+      backdropFilter: "blur(10px)",
+      border: "1px solid rgba(255, 255, 255, 0.3)",
+      color: "white",
+      boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+      borderRadius: "12px",
+      padding: "8px 16px",
+      "&:hover": {
+        backgroundColor: "rgba(255, 255, 255, 0.3)",
+      },
+    }}
+  >
+    Logout
+  </Button>
+</Box>
+
         )}
       </Toolbar>
     </AppBar>
